@@ -37,7 +37,7 @@ class YaDisk():
             print(res)
 
 
-    def upload_dir(self, source_dir, target_dir, replace=False):
+    def upload_dir(self, source_dir, target_dir, replace=False, recursion = True):
         self.create_folder(target_dir)
         items = os.listdir(source_dir.strip('/'))
         for item in items:
@@ -45,11 +45,13 @@ class YaDisk():
             target_path = target_dir.strip('/') + '/' + item
 
             if os.path.isdir(source_path):
+                if not recursion:
+                    continue
                 self.upload_dir(source_path, target_path, replace)
             else:
                 self.upload_file(source_path, target_path, replace)
 
-    def download_dir(self, source_dir, target_dir):
+    def download_dir(self, source_dir, target_dir, recursion = True):
         if not os.path.exists(target_dir):
             os.mkdir(target_dir)
         items = self.listdir(source_dir)['_embedded']['items']
@@ -59,6 +61,8 @@ class YaDisk():
             target_path = target_dir.strip('/') + '/' + item['name']
 
             if item['type'] == 'dir':
+                if not recursion:
+                    continue
                 self.download_dir(source_path, target_path)
             elif item['type'] == 'file':
                 res = requests.get(item['file'])
