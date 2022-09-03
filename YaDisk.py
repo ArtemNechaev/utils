@@ -53,7 +53,7 @@ class YaDisk():
 
     def download_dir(self, source_dir, target_dir, recursion = True):
         if not os.path.exists(target_dir):
-            os.mkdir(target_dir)
+            os.makedirs(target_dir)
         items = self.listdir(source_dir)['_embedded']['items']
         for item in items:
 
